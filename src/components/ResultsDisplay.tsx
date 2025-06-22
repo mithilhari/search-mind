@@ -42,9 +42,8 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
           {/* Content with scroll for large responses */}
           <div className="max-h-[70vh] overflow-y-auto">
             <div className="p-6 md:p-8">
-              <div className="prose prose-invert prose-lg max-w-none">
+              <div className="prose prose-invert prose-lg max-w-none text-slate-200 leading-relaxed">
                 <ReactMarkdown
-                  className="text-slate-200 leading-relaxed"
                   components={{
                     // Custom styling for markdown elements
                     h1: ({ children }) => (
