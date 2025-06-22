@@ -16,23 +16,35 @@ const Index = () => {
 
   const handleSearch = async (query: string, apiKey: string) => {
     setIsLoading(true);
-    setResults({ content: '', isStreaming: true });
+    
+    // Immediately show the results container with loading state - like ChatGPT
+    setResults({ 
+      content: '', 
+      isStreaming: true,
+      sources: []
+    });
 
     try {
-      // Simulate streaming by showing the response character by character
+      // Small delay to simulate thinking time before response begins
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
       const response = await searchWithGemini(query, apiKey);
       
-      // Simulate streaming effect
+      // Stream the response character by character with variable speed
       let currentIndex = 0;
       const streamInterval = setInterval(() => {
         if (currentIndex < response.content.length) {
-          const chunk = response.content.slice(0, currentIndex + 1);
+          // Variable chunk size for more natural streaming
+          const chunkSize = Math.floor(Math.random() * 3) + 1; // 1-3 characters
+          const chunk = response.content.slice(0, currentIndex + chunkSize);
+          
           setResults({
             content: chunk,
             sources: response.sources,
             isStreaming: true,
           });
-          currentIndex += Math.random() > 0.5 ? 2 : 1; // Variable speed
+          
+          currentIndex += chunkSize;
         } else {
           clearInterval(streamInterval);
           setResults({
@@ -40,8 +52,9 @@ const Index = () => {
             sources: response.sources,
             isStreaming: false,
           });
+          setIsLoading(false);
         }
-      }, 50);
+      }, 30); // Faster streaming interval for smoother effect
 
     } catch (error) {
       console.error('Search error:', error);
@@ -49,13 +62,13 @@ const Index = () => {
         content: 'Sorry, there was an error processing your search. Please check your API key and try again.',
         isStreaming: false,
       });
-    } finally {
       setIsLoading(false);
     }
   };
 
   const handleNewSearch = () => {
     setResults(null);
+    setIsLoading(false);
   };
 
   return (

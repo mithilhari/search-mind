@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ArrowLeft, ExternalLink, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -42,107 +41,116 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
           {/* Content with scroll for large responses */}
           <div className="max-h-[70vh] overflow-y-auto">
             <div className="p-6 md:p-8">
-              <div className="prose prose-invert prose-lg max-w-none text-slate-200 leading-relaxed">
-                <ReactMarkdown
-                  components={{
-                    // Custom styling for markdown elements
-                    h1: ({ children }) => (
-                      <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 border-b border-white/20 pb-2">
-                        {children}
-                      </h1>
-                    ),
-                    h2: ({ children }) => (
-                      <h2 className="text-xl md:text-2xl font-semibold text-white mb-3 mt-6">
-                        {children}
-                      </h2>
-                    ),
-                    h3: ({ children }) => (
-                      <h3 className="text-lg md:text-xl font-semibold text-white mb-2 mt-4">
-                        {children}
-                      </h3>
-                    ),
-                    p: ({ children }) => (
-                      <p className="mb-4 text-slate-200 leading-relaxed">
-                        {children}
-                      </p>
-                    ),
-                    ul: ({ children }) => (
-                      <ul className="list-disc list-inside mb-4 space-y-2 text-slate-200">
-                        {children}
-                      </ul>
-                    ),
-                    ol: ({ children }) => (
-                      <ol className="list-decimal list-inside mb-4 space-y-2 text-slate-200">
-                        {children}
-                      </ol>
-                    ),
-                    li: ({ children }) => (
-                      <li className="text-slate-200 leading-relaxed">
-                        {children}
-                      </li>
-                    ),
-                    blockquote: ({ children }) => (
-                      <blockquote className="border-l-4 border-blue-400 pl-4 my-4 italic text-slate-300 bg-white/5 py-2 rounded-r">
-                        {children}
-                      </blockquote>
-                    ),
-                    code: ({ children, className }) => {
-                      const isInline = !className;
-                      if (isInline) {
+              {/* Show content if available, otherwise show initial loading state */}
+              {results.content ? (
+                <div className="prose prose-invert prose-lg max-w-none text-slate-200 leading-relaxed">
+                  <ReactMarkdown
+                    components={{
+                      // Custom styling for markdown elements
+                      h1: ({ children }) => (
+                        <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 border-b border-white/20 pb-2">
+                          {children}
+                        </h1>
+                      ),
+                      h2: ({ children }) => (
+                        <h2 className="text-xl md:text-2xl font-semibold text-white mb-3 mt-6">
+                          {children}
+                        </h2>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 className="text-lg md:text-xl font-semibold text-white mb-2 mt-4">
+                          {children}
+                        </h3>
+                      ),
+                      p: ({ children }) => (
+                        <p className="mb-4 text-slate-200 leading-relaxed">
+                          {children}
+                        </p>
+                      ),
+                      ul: ({ children }) => (
+                        <ul className="list-disc list-inside mb-4 space-y-2 text-slate-200">
+                          {children}
+                        </ul>
+                      ),
+                      ol: ({ children }) => (
+                        <ol className="list-decimal list-inside mb-4 space-y-2 text-slate-200">
+                          {children}
+                        </ol>
+                      ),
+                      li: ({ children }) => (
+                        <li className="text-slate-200 leading-relaxed">
+                          {children}
+                        </li>
+                      ),
+                      blockquote: ({ children }) => (
+                        <blockquote className="border-l-4 border-blue-400 pl-4 my-4 italic text-slate-300 bg-white/5 py-2 rounded-r">
+                          {children}
+                        </blockquote>
+                      ),
+                      code: ({ children, className }) => {
+                        const isInline = !className;
+                        if (isInline) {
+                          return (
+                            <code className="bg-slate-800 text-blue-300 px-2 py-1 rounded text-sm">
+                              {children}
+                            </code>
+                          );
+                        }
                         return (
-                          <code className="bg-slate-800 text-blue-300 px-2 py-1 rounded text-sm">
+                          <code className="block bg-slate-900 text-green-300 p-4 rounded-lg overflow-x-auto text-sm border border-white/10">
                             {children}
                           </code>
                         );
-                      }
-                      return (
-                        <code className="block bg-slate-900 text-green-300 p-4 rounded-lg overflow-x-auto text-sm border border-white/10">
+                      },
+                      pre: ({ children }) => (
+                        <pre className="bg-slate-900 p-4 rounded-lg overflow-x-auto mb-4 border border-white/10">
                           {children}
-                        </code>
-                      );
-                    },
-                    pre: ({ children }) => (
-                      <pre className="bg-slate-900 p-4 rounded-lg overflow-x-auto mb-4 border border-white/10">
-                        {children}
-                      </pre>
-                    ),
-                    strong: ({ children }) => (
-                      <strong className="font-semibold text-white">
-                        {children}
-                      </strong>
-                    ),
-                    em: ({ children }) => (
-                      <em className="italic text-slate-300">
-                        {children}
-                      </em>
-                    ),
-                    a: ({ href, children }) => (
-                      <a
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:text-blue-300 underline transition-colors"
-                      >
-                        {children}
-                      </a>
-                    ),
-                  }}
-                >
-                  {results.content}
-                </ReactMarkdown>
-                
-                {results.isStreaming && (
-                  <div className="flex items-center gap-2 text-blue-400 mt-4">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="text-sm">Thinking...</span>
-                  </div>
-                )}
-              </div>
+                        </pre>
+                      ),
+                      strong: ({ children }) => (
+                        <strong className="font-semibold text-white">
+                          {children}
+                        </strong>
+                      ),
+                      em: ({ children }) => (
+                        <em className="italic text-slate-300">
+                          {children}
+                        </em>
+                      ),
+                      a: ({ href, children }) => (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 hover:text-blue-300 underline transition-colors"
+                        >
+                          {children}
+                        </a>
+                      ),
+                    }}
+                  >
+                    {results.content}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                /* Initial loading state - similar to ChatGPT's immediate response */
+                <div className="flex items-center gap-3 text-slate-300">
+                  <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
+                  <span className="text-lg">Thinking...</span>
+                </div>
+              )}
+              
+              {/* Streaming indicator at the end of content */}
+              {results.isStreaming && results.content && (
+                <div className="flex items-center gap-2 text-blue-400 mt-4">
+                  <div className="w-2 h-5 bg-blue-400 animate-pulse"></div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Sources */}
-          {results.sources && results.sources.length > 0 && (
+          {results.sources && results.sources.length > 0 && !results.isStreaming && (
             <div className="border-t border-white/20 p-6 md:p-8 bg-white/5">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                 <ExternalLink className="w-5 h-5" />
