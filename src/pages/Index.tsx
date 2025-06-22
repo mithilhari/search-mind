@@ -14,7 +14,7 @@ const Index = () => {
   const [results, setResults] = useState<SearchResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearch = async (query: string, apiKey: string) => {
+  const handleSearch = async (query: string) => {
     setIsLoading(true);
     
     // Immediately show the results container with loading state - like ChatGPT
@@ -28,7 +28,7 @@ const Index = () => {
       // Small delay to simulate thinking time before response begins
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      const response = await searchWithGemini(query, apiKey);
+      const response = await searchWithGemini(query);
       
       // Stream the response character by character with variable speed
       let currentIndex = 0;
@@ -59,7 +59,7 @@ const Index = () => {
     } catch (error) {
       console.error('Search error:', error);
       setResults({
-        content: 'Sorry, there was an error processing your search. Please check your API key and try again.',
+        content: 'Sorry, there was an error processing your search. Please check your connection and try again.',
         isStreaming: false,
       });
       setIsLoading(false);
@@ -72,7 +72,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F0F23]">
+    <div className="min-h-screen bg-[#202123]">
       <div className="relative z-10">
         {!results ? (
           <SearchInterface onSearch={handleSearch} />
