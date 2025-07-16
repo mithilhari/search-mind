@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import SearchInterface from '../components/SearchInterface';
 import ResultsDisplay from '../components/ResultsDisplay';
 import { searchWithGemini } from '../utils/geminiClient';
+import { searchWithPerplexity } from '../utils/perplexityClient';
 
 interface SearchResult {
   content: string;
@@ -14,7 +15,7 @@ const Index = () => {
   const [results, setResults] = useState<SearchResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearch = async (query: string) => {
+  const handleSearch = async (query: string, apiKey?: string) => {
     setIsLoading(true);
     
     // Immediately show the results container with loading state - like ChatGPT
@@ -28,7 +29,9 @@ const Index = () => {
       // Small delay to simulate thinking time before response begins
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      const response = await searchWithGemini(query);
+      const response = apiKey 
+        ? await searchWithPerplexity(query, apiKey)
+        : await searchWithGemini(query);
       
       // Stream the response character by character with variable speed
       let currentIndex = 0;
