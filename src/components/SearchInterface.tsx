@@ -5,31 +5,24 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 interface SearchInterfaceProps {
-  onSearch: (query: string, apiKey?: string) => void;
+  onSearch: (query: string) => void;
 }
 
 const SearchInterface: React.FC<SearchInterfaceProps> = ({ onSearch }) => {
   const [query, setQuery] = useState('');
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('perplexity-api-key') || '');
-  const [showApiKeyInput, setShowApiKeyInput] = useState(!apiKey);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      if (apiKey) {
-        localStorage.setItem('perplexity-api-key', apiKey);
-        onSearch(query.trim(), apiKey);
-      } else {
-        onSearch(query.trim());
-      }
+      onSearch(query.trim());
     }
   };
 
   const exampleQueries = [
     "What are the latest developments in AI?",
-    "Explain quantum computing in simple terms",
     "What's happening in the stock market today?",
-    "How does climate change affect ocean currents?"
+    "Recent news about climate change",
+    "Current trends in technology 2024"
   ];
 
   return (
@@ -46,45 +39,9 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({ onSearch }) => {
             SearchMind
           </h1>
           <p className="text-xl text-[#E5E7EB] max-w-2xl mx-auto">
-            Ask anything, get intelligent answers with real-time information and sources
+            Ask anything and get intelligent answers with real-time web search when needed
           </p>
         </div>
-
-        {/* API Key Input */}
-        {showApiKeyInput && (
-          <div className="max-w-2xl mx-auto mb-6">
-            <div className="bg-[#2D2D30]/70 backdrop-blur-sm border border-[#3E3E40] rounded-xl p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-[#E5E7EB]">Enable Real-time Web Search</h3>
-                <button
-                  type="button"
-                  onClick={() => setShowApiKeyInput(false)}
-                  className="text-xs text-[#9CA3AF] hover:text-[#E5E7EB] transition-colors"
-                >
-                  Use Gemini Instead
-                </button>
-              </div>
-              <Input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Enter your Perplexity API key..."
-                className="w-full bg-[#1C1C1E] border-[#3E3E40] text-white placeholder-[#6B7280] focus:border-[#1FB6FF] mb-2"
-              />
-              <p className="text-xs text-[#9CA3AF]">
-                Get your API key from{' '}
-                <a 
-                  href="https://www.perplexity.ai/settings/api" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-[#1FB6FF] hover:underline"
-                >
-                  Perplexity Settings
-                </a>
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* Search Form */}
         <form onSubmit={handleSubmit} className="mb-8">
@@ -95,7 +52,7 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({ onSearch }) => {
                 <Search className="w-6 h-6 text-[#9CA3AF] ml-4" />
                 <Input
                   type="text"
-                  placeholder={apiKey ? "Ask anything with real-time web data..." : "Ask me anything..."}
+                  placeholder="Ask me anything..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   className="flex-1 bg-transparent border-none text-white placeholder-[#6B7280] text-lg focus:outline-none focus:ring-0"
@@ -105,24 +62,11 @@ const SearchInterface: React.FC<SearchInterfaceProps> = ({ onSearch }) => {
                   disabled={!query.trim()}
                   className="bg-gradient-to-r from-[#1FB6FF] to-[#00D4AA] hover:from-[#1A9BE0] hover:to-[#00B894] text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 disabled:opacity-50"
                 >
-                  {apiKey ? "Search Live" : "Search"}
+                  Search
                 </Button>
               </div>
             </div>
           </div>
-          
-          {/* Toggle API Key Input */}
-          {!showApiKeyInput && !apiKey && (
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={() => setShowApiKeyInput(true)}
-                className="text-sm text-[#1FB6FF] hover:text-[#00D4AA] transition-colors underline"
-              >
-                + Add Perplexity API key for real-time web search
-              </button>
-            </div>
-          )}
         </form>
 
         {/* Example Queries */}
